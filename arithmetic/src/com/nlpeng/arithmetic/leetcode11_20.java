@@ -1,5 +1,6 @@
 package com.nlpeng.arithmetic;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -10,10 +11,106 @@ import java.util.*;
  **/
 public class leetcode11_20 {
     public static void main(String[] args) {
-
+        System.out.println("--------------------------Solution0011  BEGIN--------------------------");
+        Solution0191 solution0191 = new Solution0191();
+        ListNode listNode = new ListNode(1);
+        listNode.next = new ListNode(2);
+        listNode.next.next = new ListNode(3);
+        listNode.next.next.next = new ListNode(4);
+        listNode.next.next.next.next= new ListNode(5);
+        solution0191.removeNthFromEnd(listNode,2);
+        System.out.println("--------------------------Solution0011  END----------------------------");
+        System.out.println("--------------------------Solution0201  BEGIN--------------------------");
+        Solution0201 solution0201 = new Solution0201();
+        System.out.println(solution0201.isValid("(])"));
+        System.out.println("--------------------------Solution0201  END----------------------------");
+    
     }
 }
 
+/**
+ * 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+ * 有效字符串需满足：
+ *      左括号必须用相同类型的右括号闭合。
+ *      左括号必须以正确的顺序闭合。
+ */
+class Solution0201 {
+    public boolean isValid(String s) {
+        char[] chars = s.toCharArray();
+        Stack stack = new Stack();
+        for (char c:chars) {
+            if(c=='('||c=='{'||c=='['){
+               stack.push(c);
+            }
+            if(c==')'||c=='}'||c==']'){
+                if (stack.empty()){
+                    return false;
+                }
+                char b = (char)stack.lastElement();
+                if(c==')'&&b=='('){
+                    stack.pop();
+                }else if(c=='}'&&b=='{'){
+                    stack.pop();
+                }else if(c==']'&&b=='['){
+                    stack.pop();
+                }else {
+                    return false;
+                }
+            }
+        }
+        return stack.empty();
+    }
+}
+
+/**
+ * 给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+ * 示例：
+ *      给定一个链表: 1->2->3->4->5, 和 n = 2.
+ *      当删除了倒数第二个节点后，链表变为 1->2->3->5.
+ * 说明：
+ *      给定的 n 保证是有效的。
+ */
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution0191 {
+    int count = 1;
+    int size = 1;
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode zero = new ListNode(0);
+        zero.next= head;
+        int sum = hasCount(head);
+        hasNext(zero,sum-n+1);
+        return zero.next;
+    }
+    private int hasCount(ListNode listNode){
+        if (listNode.next!=null){
+            size++;
+            return hasCount(listNode.next);
+        }else {
+            return size;
+        }
+    }
+    private ListNode hasNext(ListNode listNode,int n){
+        if (count==n){
+            listNode.next = listNode.next.next;
+            return listNode;
+        }else {
+            if (listNode.next==null){
+                return listNode;
+            }else {
+                count++;
+                return hasNext(listNode.next,n);
+            }
+        }
+        
+    }
+}
 
 /**
  * 给定一个包含 n 个整数的数组 nums 和一个目标值 target，
